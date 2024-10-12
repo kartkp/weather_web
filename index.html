@@ -12,8 +12,12 @@
   <title>Weather Web</title>
 </head>
 <body>
-
-  <main class="app">
+  <div id="loading" class="loading">
+    <div class="spinner"></div>
+    
+    <p>Loading...</p>
+  </div>
+  <main class="app" style="display: none;">
     <div class="search-box">
       <input type="text" id="searchCity" placeholder="Enter city name" />
       <button onclick="getWeatherByCity()">Search</button>
@@ -47,8 +51,10 @@
       </a>
     </p>
   </footer>
-  
 
   <script src="script.js"></script>
 </body>
+
+
+
 </html>
