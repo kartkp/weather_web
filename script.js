@@ -4,9 +4,9 @@ const icon = document.querySelector("#icon");
 const coordinates = document.querySelector("#coordinates");
 const description = document.querySelector("#description");
 const temperature = document.querySelector("#temperature");
-const humidity = document.querySelector("#humidity"); // Humidity element
-const precipitation = document.querySelector("#precipitation"); // Precipitation element
-const aqi = document.querySelector("#aqi"); // AQI element
+const humidity = document.querySelector("#humidity");
+const precipitation = document.querySelector("#precipitation"); 
+const aqi = document.querySelector("#aqi");
 
 const colors = {
   "-60": "#dce9fa",
@@ -65,7 +65,7 @@ const icons = {
   Squall: "./icons/rainy-7.svg",
   Tornado: "./icons/cloudy.svg",
 };
-const timezone = document.querySelector("#timezone"); 
+
 function findMyCoordinates() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -96,18 +96,29 @@ function getDate(data) {
     hour: "2-digit",
     minute: "2-digit",
     second: "2-digit",
-    timeZoneName: "short", // This will include the timezone in the output
+    timeZoneName: "short",
   };
   
   date.textContent = cDate.toLocaleString("en-US", options);
 
-  // Get timezone offset and display it
-  const timezoneOffset = data.timezone; // Timezone offset from the OpenWeather API
-  const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get the timezone name
-  timezone.textContent = `Timezone: UTC${(timezoneOffset / 3600).toFixed(0)}`; // Convert seconds to hours
+  const timezoneOffset = data.timezone; 
+  const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone;
+  timezone.textContent = `Timezone: UTC${(timezoneOffset / 3600).toFixed(0)}`; 
+}
+
+function showLoading() {
+  document.getElementById("loading").style.display = "flex";
+  document.querySelector(".app").style.display = "none"; 
+}
+
+function hideLoading() {
+  document.getElementById("loading").style.display = "none";
+  document.querySelector(".app").style.display = "block"; 
 }
 
 function getWeather(lat, lon) {
+  showLoading(); 
+
   const endpoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
 
   fetch(endpoint)
@@ -119,16 +130,20 @@ function getWeather(lat, lon) {
       console.log(data);
       getBackgroundColor(data.main.temp);
       getCity(data.name);
-      getDate(data); // Pass data to getDate to access timezone
+      getDate(data);
       displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
       getTemperature(data.main.temp);
-      getHumidity(data.main.humidity); 
+      getHumidity(data.main.humidity);
       getPrecipitation(data);
       getAQI(lat, lon);
+      hideLoading();
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+      hideLoading();
+    });
 }
 
 function getWeatherByCity() {
@@ -137,6 +152,8 @@ function getWeatherByCity() {
     alert("Please enter a city name!");
     return;
   }
+
+  showLoading();
 
   const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
 
@@ -149,7 +166,7 @@ function getWeatherByCity() {
       console.log(data);
       getBackgroundColor(data.main.temp);
       getCity(data.name);
-      getDate(data); // Pass data to getDate to access timezone
+      getDate(data);
       displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
@@ -157,9 +174,14 @@ function getWeatherByCity() {
       getHumidity(data.main.humidity);
       getPrecipitation(data);
       getAQI(data.coord.lat, data.coord.lon);
+      hideLoading();
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      console.log(error);
+      hideLoading();
+    });
 }
+
 
 
 
