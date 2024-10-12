@@ -65,6 +65,7 @@ const icons = {
   Squall: "./icons/rainy-7.svg",
   Tornado: "./icons/cloudy.svg",
 };
+const timezone = document.querySelector("#timezone"); 
 function findMyCoordinates() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -81,8 +82,29 @@ function findMyCoordinates() {
   }
 }
 
+
 function displayCoordinates(lat, lon) {
   coordinates.textContent = `Coordinates: Latitude ${lat}, Longitude ${lon}`;
+}
+function getDate(data) {
+  const cDate = new Date();
+  const options = {
+    weekday: "long",
+    year: "numeric",
+    month: "long",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+    timeZoneName: "short", // This will include the timezone in the output
+  };
+  
+  date.textContent = cDate.toLocaleString("en-US", options);
+
+  // Get timezone offset and display it
+  const timezoneOffset = data.timezone; // Timezone offset from the OpenWeather API
+  const timezoneName = Intl.DateTimeFormat().resolvedOptions().timeZone; // Get the timezone name
+  timezone.textContent = `Timezone: UTC${(timezoneOffset / 3600).toFixed(0)}`; // Convert seconds to hours
 }
 
 function getWeather(lat, lon) {
@@ -97,7 +119,8 @@ function getWeather(lat, lon) {
       console.log(data);
       getBackgroundColor(data.main.temp);
       getCity(data.name);
-      getDate();
+      getDate(data); // Pass data to getDate to access timezone
+      displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
       getTemperature(data.main.temp);
@@ -126,7 +149,7 @@ function getWeatherByCity() {
       console.log(data);
       getBackgroundColor(data.main.temp);
       getCity(data.name);
-      getDate();
+      getDate(data); // Pass data to getDate to access timezone
       displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
@@ -137,7 +160,6 @@ function getWeatherByCity() {
     })
     .catch((error) => console.log(error));
 }
-
 
 
 
@@ -216,20 +238,7 @@ function getCity(cityName) {
   city.textContent = cityName;
 }
 
-function getDate() {
-  let cDate = new Date();
-  const options = {
-    weekday: "long",
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    timeZoneName: "short",
-  };
-  date.textContent = cDate.toLocaleString("en-US", options);
-}
+
 
 function getDescription(weatherDescription) {
   description.textContent = weatherDescription;
