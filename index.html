@@ -4,37 +4,40 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="shortcut icon" href="https://res.cloudinary.com/dnsjdvzdn/image/upload/v1728738872/Screenshot_2024-10-12_184307-removebg-preview_eqazu1.png" />
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa&display=swap" rel="stylesheet">
-
   <link rel="stylesheet" href="style.css">
-  <title>Weather Report</title>
+  <title>Weather Web</title>
 </head>
 <body>
 
   <main class="app">
+    <div class="search-box">
+      <input type="text" id="searchCity" placeholder="Enter city name" />
+      <button onclick="getWeatherByCity()">Search</button>
+    </div><br></br>
+
     <div class="gap">
       <h1 id="city"></h1>
       <p id="date"></p>
-      <p id="coordinates"></p> <!-- New Coordinates Element -->
+      <p id="coordinates"></p>
     </div>
-    
+
     <div class="icon-container">
       <img id="icon">
     </div>
-    
+
     <div class="gap">
       <h2 id="description"></h2>
       <p id="temperature"></p>
-      <p id="humidity"></p> <!-- New Humidity Element -->
-      <p id="precipitation"></p> <!-- New Precipitation Element -->
-      <p id="aqi"></p> <!-- New AQI Element -->
+      <p id="humidity"></p>
+      <p id="precipitation"></p>
+      <p id="aqi"></p> 
     </div>
   </main>
   
   <script src="script.js"></script>
-  
 </body>
 </html>
