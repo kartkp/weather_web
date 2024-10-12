@@ -1,7 +1,6 @@
-* {
+*{
   padding: 0;
   margin: 0;
-  box-sizing: border-box; /* Ensure padding and border are inside width/height */
 }
 
 body {
@@ -11,46 +10,44 @@ body {
   align-items: center;
   flex-direction: column;
   text-align: center;
-  background-color: #f0f0f0; /* Optional background color */
-  height: 100vh;
   overflow: hidden;
+  color: transparent;
+  height: 100vh;
 }
 
 h1,
 h2,
 h3,
-p {
+p{
   color: white;
   text-shadow: 1px 1px 2px black;
 }
 
-#temperature {
-  font-size: 1.5rem;
-  font-weight: bold;
+#temperature{
+  font-size: 1.2rem;
 }
 
-.icon-container {
+.icon-container{
   position: relative;
-  width: 150px; /* Adjusted width for better scaling */
-  height: 150px;
-  margin: 20px auto;
+  width: 250px;
+  height: 200px;
+  /* border: 1px solid orange; */
+} 
+
+
+#icon{
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: 250px;
+  margin: auto;
+  /* border: 1px solid white; */
 }
 
-#icon {
-  width: 100%; /* Ensure the icon takes up the full container size */
-  height: 100%;
-  object-fit: contain;
-}
-
-.gap {
+.gap{
   display: flex;
   flex-direction: column;
   gap: 5px;
-}
-
-main.app {
-  background-color: #333; /* Dark background for better contrast */
-  padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Optional shadow */
 }
