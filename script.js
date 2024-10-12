@@ -69,7 +69,6 @@ function findMyCoordinates() {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        // Display coordinates to the user
         displayCoordinates(position.coords.latitude, position.coords.longitude);
         getWeather(position.coords.latitude, position.coords.longitude);
       },
@@ -102,12 +101,46 @@ function getWeather(lat, lon) {
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
       getTemperature(data.main.temp);
-      getHumidity(data.main.humidity); // Get humidity
-      getPrecipitation(data); // Get precipitation
-      getAQI(lat, lon); // Get AQI
+      getHumidity(data.main.humidity); 
+      getPrecipitation(data);
+      getAQI(lat, lon);
     })
     .catch((error) => console.log(error));
 }
+
+function getWeatherByCity() {
+  const cityName = document.querySelector("#searchCity").value;
+  if (!cityName) {
+    alert("Please enter a city name!");
+    return;
+  }
+
+  const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
+
+  fetch(endpoint)
+    .then((response) => {
+      if (response.status !== 200) throw Error(response.statusText);
+      return response.json();
+    })
+    .then((data) => {
+      console.log(data);
+      getBackgroundColor(data.main.temp);
+      getCity(data.name);
+      getDate();
+      displayCoordinates(data.coord.lat, data.coord.lon);
+      getDescription(data.weather[0].main);
+      getWeatherIcon(data.weather[0].main);
+      getTemperature(data.main.temp);
+      getHumidity(data.main.humidity);
+      getPrecipitation(data);
+      getAQI(data.coord.lat, data.coord.lon);
+    })
+    .catch((error) => console.log(error));
+}
+
+
+
+
 function getHumidity(hum) {
   humidity.textContent = `Humidity: ${hum}%`;
 }
@@ -129,9 +162,35 @@ function getAQI(lat, lon) {
       return response.json();
     })
     .then((data) => {
-      // AQI is typically an array; get the first value
       const airQualityIndex = data.list[0].main.aqi;
-      aqi.textContent = `AQI: ${airQualityIndex}`;
+      let aqiDescription = '';
+
+      switch (airQualityIndex) {
+        case 1:
+          aqiDescription = 'Good (0-50)';
+          break;
+        case 2:
+          aqiDescription = 'Fair (51-100)';
+          break;
+        case 3:
+          aqiDescription = 'Moderate (101-150)';
+          break;
+        case 4:
+          aqiDescription = 'Poor (151-200)';
+          break;
+        case 5:
+          if (airQualityIndex > 350) {
+            aqiDescription = 'You are gonna die (350+)';
+          } else {
+            aqiDescription = 'Very Poor (201+)';
+          }
+          break;
+        default:
+          aqiDescription = 'Unknown';
+      }
+      
+
+      aqi.textContent = `AQI: ${aqiDescription}`;
     })
     .catch((error) => console.log(error));
 }
