@@ -117,11 +117,11 @@ function hideLoading() {
 }
 
 function getWeather(lat, lon) {
-  showLoading(); 
+  showLoading();
 
-  const endpoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
+  const weatherEndpoint = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
 
-  fetch(endpoint)
+  fetch(weatherEndpoint)
     .then((response) => {
       if (response.status !== 200) throw Error(response.statusText);
       return response.json();
@@ -129,8 +129,6 @@ function getWeather(lat, lon) {
     .then((data) => {
       console.log(data);
       getBackgroundColor(data.main.temp);
-      getCity(data.name);
-      getDate(data);
       displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
       getWeatherIcon(data.weather[0].main);
@@ -138,6 +136,7 @@ function getWeather(lat, lon) {
       getHumidity(data.main.humidity);
       getPrecipitation(data);
       getAQI(lat, lon);
+      getStateAndCountry(lat, lon);
       hideLoading();
     })
     .catch((error) => {
@@ -145,6 +144,16 @@ function getWeather(lat, lon) {
       hideLoading();
     });
 }
+function getCity(cityName, stateName, countryName) {
+  const cityElem = document.querySelector("#cityName");
+  const stateCountryElem = document.querySelector("#stateCountryName");
+
+  cityElem.textContent = cityName;
+  stateCountryElem.textContent = `${stateName}, ${countryName}`;
+}
+
+
+
 
 function getWeatherByCity() {
   const cityName = document.querySelector("#searchCity").value;
@@ -155,9 +164,9 @@ function getWeatherByCity() {
 
   showLoading();
 
-  const endpoint = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
+  const weatherEndpoint = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
 
-  fetch(endpoint)
+  fetch(weatherEndpoint)
     .then((response) => {
       if (response.status !== 200) throw Error(response.statusText);
       return response.json();
@@ -165,7 +174,6 @@ function getWeatherByCity() {
     .then((data) => {
       console.log(data);
       getBackgroundColor(data.main.temp);
-      getCity(data.name);
       getDate(data);
       displayCoordinates(data.coord.lat, data.coord.lon);
       getDescription(data.weather[0].main);
@@ -174,6 +182,7 @@ function getWeatherByCity() {
       getHumidity(data.main.humidity);
       getPrecipitation(data);
       getAQI(data.coord.lat, data.coord.lon);
+      getStateAndCountry(data.coord.lat, data.coord.lon);
       hideLoading();
     })
     .catch((error) => {
@@ -181,6 +190,22 @@ function getWeatherByCity() {
       hideLoading();
     });
 }
+function getStateAndCountry(lat, lon) {
+  const geoEndpoint = `https://api.openweathermap.org/geo/1.0/reverse?lat=${lat}&lon=${lon}&limit=1&appid=16a2314e91b166c8c3c5b3c33539f22b`;
+
+  fetch(geoEndpoint)
+    .then((response) => {
+      if (response.status !== 200) throw Error(response.statusText);
+      return response.json();
+    })
+    .then((geoData) => {
+      const stateName = geoData[0].state || "N/A";
+      const countryName = geoData[0].country || "N/A";
+      getCity(geoData[0].name, stateName, countryName);
+    })
+    .catch((error) => console.log(error));
+}
+
 
 
 
@@ -256,9 +281,6 @@ function getBackgroundColor(temp) {
   document.body.style.background = `radial-gradient(ellipse at center, ${color} 0%, #000000 100%)`;
 }
 
-function getCity(cityName) {
-  city.textContent = cityName;
-}
 
 
 
