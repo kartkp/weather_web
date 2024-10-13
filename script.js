@@ -109,6 +109,7 @@ function getDate(data) {
 function showLoading() {
   document.getElementById("loading").style.display = "flex";
   document.querySelector(".app").style.display = "none"; 
+  
 }
 
 function hideLoading() {
@@ -163,6 +164,7 @@ function getWeatherByCity() {
   }
 
   showLoading();
+  
 
   const weatherEndpoint = `https://api.openweathermap.org/data/2.5/weather?q=${cityName}&units=imperial&appid=16a2314e91b166c8c3c5b3c33539f22b`;
 
@@ -183,7 +185,9 @@ function getWeatherByCity() {
       getPrecipitation(data);
       getAQI(data.coord.lat, data.coord.lon);
       getStateAndCountry(data.coord.lat, data.coord.lon);
-      hideLoading();
+      setTimeout(() => {
+        hideLoading();
+      }, 300);
     })
     .catch((error) => {
       console.log(error);
